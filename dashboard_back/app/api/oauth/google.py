@@ -9,7 +9,7 @@ import os
 import urllib.parse
 import httpx
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.api.oauth.utils import process_oauth_login
@@ -20,6 +20,7 @@ CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 SCOPES = "openid email profile"
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 @router.get("/login")
 def login():
@@ -63,4 +64,4 @@ async def callback(code: str, db: Session = Depends(get_db)):
         user_info = user_resp.json()
 
     jwt = process_oauth_login(db, "google", user_info, token_data)
-    return JSONResponse({"access_token": jwt, "token_type": "bearer", "provider": "google"})
+    return RedirectResponse(f"{FRONTEND_URL}/login?token={jwt}")
