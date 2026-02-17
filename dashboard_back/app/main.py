@@ -10,8 +10,10 @@ from app.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import user, widget
-from app.api import auth
+from app.api import auth, widgets
 from app.api.oauth import google, github
+
+import app.services.weather
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,6 +30,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(google.router)
 app.include_router(github.router)
+app.include_router(widgets.router)
 
 @app.get("/")
 def read_root():
