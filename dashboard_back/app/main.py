@@ -14,6 +14,7 @@ from app.api import auth, widgets
 from app.api.oauth import google, github
 
 import app.services.weather
+import app.services.gmail
 
 Base.metadata.create_all(bind=engine)
 

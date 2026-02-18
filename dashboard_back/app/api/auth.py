@@ -68,7 +68,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
     return user
 
-@router.get("/providers", response_model=List[str])
+@router.get("/providers")
 def get_connected_providers(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     tokens = db.query(OAuth2Token).filter(OAuth2Token.user_id == user.id).all()
     return [t.provider for t in tokens]
