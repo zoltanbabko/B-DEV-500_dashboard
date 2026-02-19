@@ -17,11 +17,11 @@ export default function WeatherWidget({data}) {
         <div className="flex justify-between text-xs text-slate-400 mt-4 px-4 border-t border-slate-100 pt-3">
             <div className="flex flex-col">
                 <span className="font-bold text-slate-600">{data.humidity}%</span>
-                <span>Humidité</span>
+                <span>Humidity</span>
             </div>
             <div className="flex flex-col">
                 <span className="font-bold text-slate-600">{data.wind} km/h</span>
-                <span>Vent</span>
+                <span>Wind</span>
             </div>
         </div>
     </div>
