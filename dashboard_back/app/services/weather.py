@@ -15,28 +15,28 @@ BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
 @register_widget(
     service="weather",
-    name="Météo Ville",
+    name="City Weather",
     type="city_temperature",
-    description="Affiche la température actuelle d'une ville.",
-    params=[{"name": "city", "type": "string", "label": "Nom de la ville"}]
+    description="Displays the current temperature of a city.",
+    params=[{"name": "city", "type": "string", "label": "City name"}]
 )
 async def get_weather_data(params: dict, token: str = None):
     city = params.get("city")
     if not city:
-        raise HTTPException(status_code=400, detail="Paramètre 'city' manquant")
+        raise HTTPException(status_code=400, detail="Parameter 'city' is required")
     if not API_KEY:
-        raise HTTPException(status_code=500, detail="Configuration serveur: Clé API Météo manquante")
+        raise HTTPException(status_code=500, detail="OpenWeather API key not configured")
 
     async with httpx.AsyncClient() as client:
         response = await client.get(BASE_URL, params={
             "q": city,
             "appid": API_KEY,
             "units": "metric",
-            "lang": "fr"
+            "lang": "en"
         })
 
     if response.status_code != 200:
-        raise HTTPException(status_code=404, detail=f"Ville '{city}' introuvable")
+        raise HTTPException(status_code=404, detail=f"City '{city}' not found")
 
     data = response.json()
 

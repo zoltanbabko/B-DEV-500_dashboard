@@ -11,14 +11,14 @@ from app.services.registry import register_widget
 
 @register_widget(
     service="google",
-    name="Gmail - Non lus",
+    name="Gmail - Unread Emails",
     type="gmail_unread",
-    description="Affiche les 3 derniers emails non lus.",
+    description="Display the count and last 3 unread emails from Gmail",
     params=[]
 )
 async def get_gmail_unread(params: dict, token: str = None):
     if not token:
-        raise HTTPException(status_code=401, detail="Google non connecté")
+        raise HTTPException(status_code=401, detail="Google token is required")
 
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
 
@@ -26,13 +26,14 @@ async def get_gmail_unread(params: dict, token: str = None):
         list_resp = await client.get(
             "https://gmail.googleapis.com/gmail/v1/users/me/messages",
             headers=headers,
-            params={"q": "is:unread", "maxResults": 3}
+            params={"q": "is:unread"}
         )
 
         if list_resp.status_code != 200:
              raise HTTPException(status_code=400, detail="Erreur Gmail API")
 
-        messages_meta = list_resp.json().get("messages", [])
+        nb_unread = list_resp.json().get("resultSizeEstimate", 0)
+        messages_meta = list_resp.json().get("messages", [])[:3]
         emails = []
         for msg in messages_meta:
             detail_resp = await client.get(
@@ -46,4 +47,4 @@ async def get_gmail_unread(params: dict, token: str = None):
             sender = next((h["value"] for h in headers_list if h["name"] == "From"), "Inconnu")
             emails.append({"subject": subject, "from": sender.split("<")[0].strip()})
 
-    return {"count": len(emails), "emails": emails}
+    return {"count": nb_unread, "emails": emails}
