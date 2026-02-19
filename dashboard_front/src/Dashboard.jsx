@@ -13,7 +13,9 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const [widgets, setWidgets] = useState([]);
     const [availableWidgets, setAvailableWidgets] = useState([]);
-    const [lastUpdated, setLastUpdated] = useState(new Date());
+    const [providers, setProviders] = useState([]);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const [seconds, setSeconds] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedType, setSelectedType] = useState("");
     const [formParams, setFormParams] = useState({});
@@ -33,13 +35,20 @@ export default function Dashboard() {
         const initData = async () => {
             await fetchWidgets(token);
             await fetchCatalog();
+            await fetchProviders(token);
         };
 
         initData();
 
         const interval = setInterval(() => {
-            setLastUpdated(new Date());
-        }, 30000);
+            setSeconds(prev => {
+                if (prev >= 30) {
+                    setRefreshTrigger(t => t + 1); 
+                    return 0;
+                }
+                return prev + 1;
+            });
+        }, 1000);
 
         return () => clearInterval(interval);
     }, [navigate]);
@@ -122,6 +131,21 @@ export default function Dashboard() {
         }
     };
 
+    const fetchProviders = async (token) => {
+        try {
+            const res = await fetch("http://127.0.0.1:8000/auth/providers", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (res.ok)
+                setProviders(await res.json());
+        } catch (e) { console.error(e); }
+    };
+
+    const handleLinkAccount = (provider) => {
+        const token = localStorage.getItem("token");
+        window.location.href = `http://127.0.0.1:8000/auth/${provider}/login?token=${token}`;
+    };
+
     const handleParamChange = (name, value) => {
         setFormParams(prev => ({ ...prev, [name]: value }));
     };
@@ -137,14 +161,37 @@ export default function Dashboard() {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3 h-3 animate-spin">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
-                        Last update: {lastUpdated.toLocaleTimeString()}
+                        Last refresh: {seconds}s
                     </div>
                 </div>
+
                 <div className="dropdown dropdown-end">
                     <div tabIndex={0} role="button" className="btn btn-circle btn-ghost bg-slate-50 border border-slate-200">U</div>
-                    <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-lg w-40 border border-slate-100">
+                    <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow-lg menu menu-sm dropdown-content bg-white rounded-lg w-60 border border-slate-100">
+                    <li className="menu-title text-slate-400">Account linked</li>
+                    <li>
+                    {providers.includes("google") ? (
+                        <span className="text-green-600 font-bold">✓ Google Connected</span>
+                    ) : (
+                        <a onClick={() => handleLinkAccount("google")} className="text-blue-600">
+                            + Link Google
+                        </a>
+                    )}
+                    </li>
+
+                    <li>
+                    {providers.includes("github") ? (
+                        <span className="text-green-600 font-bold">✓ GitHub Connected</span>
+                    ) : (
+                        <a onClick={() => handleLinkAccount("github")} className="text-black">
+                            + Link GitHub
+                        </a>
+                    )}
+                    </li>
+
+                    <div className="divider my-1"></div>
                         <li><a onClick={logout} className="text-red-600">Logout</a></li>
-                    </ul>
+                        </ul>
                 </div>
             </div>
 
@@ -153,7 +200,7 @@ export default function Dashboard() {
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900">My Widgets</h1>
                         <p className="text-slate-500 mt-1">Manage your personal space</p>
-                        <p className="text-xs text-slate-400 mt-2 md:hidden">Updated: {lastUpdated.toLocaleTimeString()}</p>
+                        <p className="text-xs text-slate-400 mt-2 md:hidden">Refresh: {seconds}s</p>
                     </div>
                     <button 
                         onClick={() => setIsModalOpen(true)}
@@ -169,7 +216,7 @@ export default function Dashboard() {
                             key={widget.id} 
                             widget={widget} 
                             onDelete={handleDelete} 
-                            refreshTrigger={lastUpdated}
+                            refreshTrigger={refreshTrigger}
                         />
                     ))}
 
