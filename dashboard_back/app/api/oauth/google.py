@@ -21,7 +21,7 @@ router = APIRouter(prefix="/auth/google", tags=["auth_google"])
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
-SCOPES = "openid email profile https://www.googleapis.com/auth/gmail.readonly"
+SCOPES = "openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/calendar.events.readonly"
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 @router.get("/login")

@@ -30,7 +30,7 @@ async def get_gmail_unread(params: dict, token: str = None):
         )
 
         if list_resp.status_code != 200:
-             raise HTTPException(status_code=400, detail="Erreur Gmail API")
+             raise HTTPException(status_code=400, detail="Error Gmail API try to reconnect Google")
 
         nb_unread = list_resp.json().get("resultSizeEstimate", 0)
         messages_meta = list_resp.json().get("messages", [])[:3]
@@ -43,8 +43,8 @@ async def get_gmail_unread(params: dict, token: str = None):
             data = detail_resp.json()
             payload = data.get("payload", {})
             headers_list = payload.get("headers", [])
-            subject = next((h["value"] for h in headers_list if h["name"] == "Subject"), "(Sans sujet)")
-            sender = next((h["value"] for h in headers_list if h["name"] == "From"), "Inconnu")
+            subject = next((h["value"] for h in headers_list if h["name"] == "Subject"), "(Without Subject)")
+            sender = next((h["value"] for h in headers_list if h["name"] == "From"), "Unknown Sender")
             emails.append({"subject": subject, "from": sender.split("<")[0].strip()})
 
     return {"count": nb_unread, "emails": emails}
