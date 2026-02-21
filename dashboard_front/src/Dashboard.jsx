@@ -171,7 +171,9 @@ export default function Dashboard() {
                     <li className="menu-title text-slate-400">Account linked</li>
                     <li>
                     {providers.includes("google") ? (
-                        <span className="text-green-600 font-bold">✓ Google Connected</span>
+                        <a onClick={() => handleLinkAccount("google")} className="text-green-600 font-bold hover:bg-green-50">
+                            ✓ Google (Connect again)
+                        </a>
                     ) : (
                         <a onClick={() => handleLinkAccount("google")} className="text-blue-600">
                             + Link Google
@@ -181,7 +183,9 @@ export default function Dashboard() {
 
                     <li>
                     {providers.includes("github") ? (
-                        <span className="text-green-600 font-bold">✓ GitHub Connected</span>
+                        <a onClick={() => handleLinkAccount("github")} className="text-green-600 font-bold hover:bg-green-50">
+                            ✓ GitHub (Connect again)
+                        </a>
                     ) : (
                         <a onClick={() => handleLinkAccount("github")} className="text-black">
                             + Link GitHub
