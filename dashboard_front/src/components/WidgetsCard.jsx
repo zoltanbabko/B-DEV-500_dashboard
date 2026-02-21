@@ -8,10 +8,19 @@
 import { useState, useEffect } from "react";
 import WeatherWidget from "./widgets/WeatherWidget";
 import GmailWidget from "./widgets/GmailWidget";
+import { GithubProfileWidget, GithubIssuesWidget } from "./widgets/GithubProfileWidget";
+import NasaWidget from "./widgets/NasaWidget";
+import CatWidget from "./widgets/CatWidget";
+import CalendarWidget from "./widgets/CalendarWidget";
 
 const WIDGET_COMPONENTS = {
     "city_temperature": WeatherWidget,
-    "gmail_unread": GmailWidget
+    "gmail_unread": GmailWidget,
+    "user_profile": GithubProfileWidget,
+    "github_issues": GithubIssuesWidget,
+    "nasa_apod": NasaWidget,
+    "random_cat": CatWidget,
+    "google_calendar": CalendarWidget,
 };
 
 export default function WidgetCard({widget, onDelete, refreshTrigger}) {
@@ -24,6 +33,16 @@ export default function WidgetCard({widget, onDelete, refreshTrigger}) {
             return widget.params.city;
         if (widget.type === 'gmail_unread')
             return 'GMAIL';
+        if (widget.type === 'user_profile')
+            return 'PROFILE';
+        if (widget.type === 'github_issues' && widget.params.repo)
+            return widget.params.repo;
+        if (widget.type === 'nasa_apod')
+            return 'APOD';
+        if (widget.type === 'random_cat')
+            return 'MEOW';
+        if (widget.type === 'google_calendar')
+            return 'CALENDAR';
         return '';
     };
 
@@ -80,3 +99,4 @@ export default function WidgetCard({widget, onDelete, refreshTrigger}) {
         </div>
     );
 }
+
