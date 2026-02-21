@@ -15,6 +15,10 @@ from app.api.oauth import google, github
 
 import app.services.weather
 import app.services.gmail
+import app.services.github
+import app.services.nasa
+import app.services.cats
+import app.services.calendar
 
 Base.metadata.create_all(bind=engine)
 
