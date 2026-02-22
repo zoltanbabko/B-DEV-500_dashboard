@@ -12,6 +12,7 @@ import { GithubProfileWidget, GithubIssuesWidget } from "./widgets/GithubProfile
 import NasaWidget from "./widgets/NasaWidget";
 import CatWidget from "./widgets/CatWidget";
 import CalendarWidget from "./widgets/CalendarWidget";
+import CityBikesWidget from "./widgets/CityBikesWidget";
 
 const WIDGET_COMPONENTS = {
     "city_temperature": WeatherWidget,
@@ -21,6 +22,7 @@ const WIDGET_COMPONENTS = {
     "nasa_apod": NasaWidget,
     "random_cat": CatWidget,
     "google_calendar": CalendarWidget,
+    "city_bikes": CityBikesWidget,
 };
 
 export default function WidgetCard({widget, onDelete, refreshTrigger}) {
@@ -43,6 +45,8 @@ export default function WidgetCard({widget, onDelete, refreshTrigger}) {
             return 'MEOW';
         if (widget.type === 'google_calendar')
             return 'CALENDAR';
+        if (widget.type === 'city_bikes' && widget.params.city)
+            return widget.params.city;
         return '';
     };
 
