@@ -19,6 +19,7 @@ import app.services.github
 import app.services.nasa
 import app.services.cats
 import app.services.calendar
+import app.services.citybikes
 
 Base.metadata.create_all(bind=engine)
 
