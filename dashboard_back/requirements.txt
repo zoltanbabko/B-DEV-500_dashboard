@@ -8,3 +8,4 @@ python-multipart
 httpx
 requests
 # apscheduler
+email-validator>=2.0.0
