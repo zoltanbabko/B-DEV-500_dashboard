@@ -55,7 +55,7 @@ export default function Dashboard() {
 
     const fetchWidgets = async (token) => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/widgets/", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/widgets/`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -72,7 +72,7 @@ export default function Dashboard() {
 
     const fetchCatalog = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/widgets/available");
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/widgets/available`);
             if (response.ok) {
                 const data = await response.json();
                 setAvailableWidgets(data);
@@ -84,7 +84,7 @@ export default function Dashboard() {
 
     const handleDelete = async (id) => {
         const token = localStorage.getItem("token");
-        const response = await fetch(`http://127.0.0.1:8000/widgets/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/widgets/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -106,7 +106,7 @@ export default function Dashboard() {
         if (!definition)
             return;
 
-        const response = await fetch("http://127.0.0.1:8000/widgets/", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/widgets/`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json", 
@@ -133,7 +133,7 @@ export default function Dashboard() {
 
     const fetchProviders = async (token) => {
         try {
-            const res = await fetch("http://127.0.0.1:8000/auth/providers", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/providers`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (res.ok)
@@ -143,7 +143,7 @@ export default function Dashboard() {
 
     const handleLinkAccount = (provider) => {
         const token = localStorage.getItem("token");
-        window.location.href = `http://127.0.0.1:8000/auth/${provider}/login?token=${token}`;
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/${provider}/login?token=${token}`;
     };
 
     const handleParamChange = (name, value) => {

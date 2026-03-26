@@ -29,9 +29,9 @@ export default function Auth({mode}) {
         e.preventDefault();
         setError("");
 
-        let url = "http://127.0.0.1:8000/auth/login";
+        let url = `${import.meta.env.VITE_API_URL}/auth/login`;
         if (isRegister)
-            url = "http://127.0.0.1:8000/auth/register";
+            url = `${import.meta.env.VITE_API_URL}/auth/register`;
 
         try {
             const response = await fetch(url, {
@@ -57,7 +57,7 @@ export default function Auth({mode}) {
     };
 
     const handleOAuth = (provider) => {
-        window.location.href = `http://127.0.0.1:8000/auth/${provider}/login`;
+        window.location.href = `${import.meta.env.VITE_API_URL}/auth/${provider}/login`;
     };
 
     return (

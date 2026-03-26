@@ -60,7 +60,7 @@ export default function WidgetCard({widget, onDelete, refreshTrigger}) {
             const token = localStorage.getItem("token");
             try {
                 const response = await fetch(
-                    `http://127.0.0.1:8000/widgets/${widget.id}/data`,
+                    `${import.meta.env.VITE_API_URL}/widgets/${widget.id}/data`,
                     {headers: { Authorization: `Bearer ${token}` },});
                 const result = await response.json();
                 if (!response.ok) {
